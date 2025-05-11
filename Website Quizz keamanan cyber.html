@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kuis Keamanan Siber</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    .dropzone {
+      background-color: #d1e0f0;
+      padding: 10px;
+      min-height: 40px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+    .draggable {
+      padding: 8px 12px;
+      background-color: #ddd;
+      margin: 5px;
+      border-radius: 6px;
+      display: inline-block;
+      cursor: move;
+    }
+    .dropzone.over {
+      background-color: #a3c1f0;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Beberapa contoh ancaman dalam keamanan siber diantaranya..</h2>
+
+  <div class="dropzone" data-answer="Malware" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <p>merupakan perangkat lunak berbahaya yang dirancang untuk merusak, mencuri data, atau mengeksploitasi sistem komputer atau jaringan</p>
+
+  <div class="dropzone" data-answer="Phising" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <p>merupakan teknik penipuan online yang dilakukan oleh penjahat siber untuk mencuri data pribadi pengguna</p>
+
+  <div class="dropzone" data-answer="Denial of Service (DoS)" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <p>merupakan serangan siber yang bertujuan untuk mengganggu layanan, situs web, atau jaringan</p>
+
+  <div>
+    <span class="draggable" draggable="true" ondragstart="drag(event)" id="Phising">Phising</span>
+    <span class="draggable" draggable="true" ondragstart="drag(event)" id="Malware">Malware</span>
+    <span class="draggable" draggable="true" ondragstart="drag(event)" id="Denial of Service (DoS)">Denial of Service (DoS)</span>
+  </div>
+
+  <button onclick="checkAnswers()">✅ Check</button>
+  <p id="result"></p>
+
+  <script>
+    function allowDrop(ev) {
+      ev.preventDefault();
+      ev.target.classList.add("over");
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      ev.target.classList.remove("over");
+      const data = ev.dataTransfer.getData("text");
+      ev.target.textContent = data;
+      ev.target.setAttribute("data-user", data);
+    }
+
+    function checkAnswers() {
+      let correct = 0;
+      const dropzones = document.querySelectorAll(".dropzone");
+      dropzones.forEach(zone => {
+        const userAnswer = zone.getAttribute("data-user");
+        const correctAnswer = zone.getAttribute("data-answer");
+        if (userAnswer === correctAnswer) {
+          correct++;
+          zone.style.backgroundColor = "#c7f5d4";
+        } else {
+          zone.style.backgroundColor = "#f5c7c7";
+        }
+      });
+      document.getElementById("result").textContent = `Skor Anda: ${correct}/${dropzones.length}`;
+    }
+  </script>
+</body>
+</html>
