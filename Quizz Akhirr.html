@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kuis Keamanan Siber</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: auto; background: #f0f4f8; }
+    h2 { border-top: 2px solid #333; padding-top: 10px; }
+    .question { background: #fff; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .option { margin: 5px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; background-color: #eee; }
+    .option.correct { background-color: #c8f7c5; }
+    .option.wrong { background-color: #f7c5c5; }
+    .retry-btn { margin-top: 10px; display: none; padding: 8px 16px; border: none; background: #007bff; color: white; border-radius: 5px; cursor: pointer; }
+    .divider { margin: 30px 0; border-top: 2px solid #aaa; }
+  </style>
+</head>
+<body>
+  <h1>Kuis Interaktif: Keamanan Siber</h1>
+  <div id="quiz"></div>
+
+  <script>
+    const questions = [
+      { section: "Policy, Legal Issues & Safety Ethics", data: [
+        {
+          q: "Apa yang dimaksud dengan etika dalam dunia siber?",
+          a: "Aturan moral yang mengatur perilaku pengguna internet",
+          options: ["Melanggar hukum untuk kepentingan pribadi", "Aturan moral yang mengatur perilaku pengguna internet", "Membuat program berbahaya", "Mengabaikan keamanan jaringan"]
+        },
+        {
+          q: "Undang-undang ITE di Indonesia mengatur tentang...?",
+          a: "Tindak pidana di dunia digital seperti pencemaran nama baik dan hacking",
+          options: ["Tindak pidana di dunia digital seperti pencemaran nama baik dan hacking", "Pajak transaksi online", "Harga kuota internet", "Penggunaan listrik untuk komputer"]
+        }
+      ]},
+
+      { section: "Cyber Security Fundamentals", data: [
+        {
+          q: "Apa tujuan utama dari keamanan siber?",
+          a: "Melindungi data dan sistem dari ancaman digital",
+          options: ["Mengurangi biaya listrik", "Melindungi data dan sistem dari ancaman digital", "Mengganti kata sandi", "Menjual perangkat keras"]
+        },
+        {
+          q: "Berikut ini merupakan contoh ancaman siber, kecuali...?",
+          a: "Memperbarui sistem operasi secara berkala",
+          options: ["Virus komputer", "Phishing", "Spyware", "Memperbarui sistem operasi secara berkala"]
+        }
+      ]},
+
+      { section: "Communication and Networking", data: [
+        {
+          q: "Apa fungsi utama dari protokol dalam jaringan komputer?",
+          a: "Mengatur cara perangkat berkomunikasi",
+          options: ["Mengatur cara perangkat berkomunikasi", "Membuat komputer lebih cepat", "Menghubungkan ke internet tanpa kabel", "Memperbaiki kabel jaringan"]
+        },
+        {
+          q: "Jaringan komputer yang menghubungkan perangkat dalam satu ruangan disebut...?",
+          a: "LAN",
+          options: ["MAN", "WAN", "LAN", "Internet"]
+        }
+      ]},
+
+      { section: "Information Security", data: [
+        {
+          q: "Informasi rahasia sebaiknya dienkripsi agar...?",
+          a: "Tidak bisa dibaca oleh pihak yang tidak berwenang",
+          options: ["Lebih cepat dibagikan", "Bisa dihapus otomatis", "Tidak bisa dibaca oleh pihak yang tidak berwenang", "Tersimpan selamanya"]
+        },
+        {
+          q: "Contoh data sensitif yang perlu dilindungi adalah...?",
+          a: "Nomor KTP dan informasi kartu kredit",
+          options: ["Alamat sekolah", "Hobi dan minat", "Nomor KTP dan informasi kartu kredit", "Jumlah teman"]
+        }
+      ]},
+
+      { section: "Network & Physical Security", data: [
+        {
+          q: "Firewall digunakan untuk...?",
+          a: "Menyaring lalu lintas data masuk dan keluar jaringan",
+          options: ["Mempercepat internet", "Menyaring lalu lintas data masuk dan keluar jaringan", "Menambah kapasitas RAM", "Menurunkan suhu CPU"]
+        },
+        {
+          q: "Pengamanan fisik terhadap perangkat keras mencakup...?",
+          a: "Mengunci server dalam ruangan khusus",
+          options: ["Mengunci server dalam ruangan khusus", "Mencetak data", "Menginstal aplikasi", "Memasang iklan"]
+        }
+      ]}
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById("quiz");
+      container.innerHTML = "";
+      questions.forEach((group, groupIndex) => {
+        const sectionTitle = document.createElement("h2");
+        sectionTitle.textContent = group.section;
+        container.appendChild(sectionTitle);
+
+        group.data.forEach((item, i) => {
+          const qBox = document.createElement("div");
+          qBox.className = "question";
+
+          const qText = document.createElement("p");
+          qText.textContent = item.q;
+          qBox.appendChild(qText);
+
+          const opts = [...item.options];
+          shuffle(opts);
+
+          opts.forEach(opt => {
+            const btn = document.createElement("div");
+            btn.className = "option";
+            btn.textContent = opt;
+            btn.onclick = () => {
+              if (btn.classList.contains("correct") || btn.classList.contains("wrong")) return;
+              if (opt === item.a) {
+                btn.classList.add("correct");
+              } else {
+                btn.classList.add("wrong");
+                retryBtn.style.display = "inline-block";
+              }
+            };
+            qBox.appendChild(btn);
+          });
+
+          const retryBtn = document.createElement("button");
+          retryBtn.className = "retry-btn";
+          retryBtn.textContent = "Coba Lagi";
+          retryBtn.onclick = () => renderQuiz();
+
+          qBox.appendChild(retryBtn);
+          container.appendChild(qBox);
+        });
+
+        const divider = document.createElement("div");
+        divider.className = "divider";
+        container.appendChild(divider);
+      });
+    }
+
+    renderQuiz();
+  </script>
+</body>
+</html>
